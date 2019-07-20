@@ -47,7 +47,7 @@
                 <a class="nav-item nav-link" href="{% url 'blog-signup' %}">Signup</a>
               {% else %}
                 <a class="nav-item nav-link" href="{% url 'blog-logout' %}">Logout</a>
-                <a class="nav-item nav-link" href="{% url 'blog-profile' %}">Profile</a>
+                <a class="nav-item nav-link" href="{% url 'blog-myProfile' %}">My Profile</a>
                 <a class="nav-item nav-link" href="{% url 'blog-post_form' %}">Make A Post</a>
 
               {% endif %}
@@ -58,7 +58,7 @@
         </div>
       </nav>
     </header>
-
+    
     <main role="main" class="container">
       <div class="row">
         <div class="col-md-8">

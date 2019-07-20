@@ -32,8 +32,13 @@
           <div class="collapse navbar-collapse" id="navbarToggle">
             <div class="navbar-nav mr-auto">
                 {% if messg %}
+                  <a class="nav-item nav-link" href="{% url 'blog-about' %}">About</a>
+                  <a class="nav-item nav-link" href="{% url 'blog-contact' %}" style="color:white;">Contact Us</a>
 
                 {% else %}
+
+                    <a class="nav-item nav-link" href="{% url 'blog-about' %}">About</a>
+                    <a class="nav-item nav-link" href="{% url 'blog-contact' %}" style="color:white;">Contact Us</a>
 
                     <a class="nav-item nav-link" href="{% url 'blog-knowledge' %}">Knowledge Board</a>
                 {% endif %}
@@ -41,14 +46,17 @@
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
-                {% if messg %}
-                    <a class="nav-item nav-link" href="{% url 'blog-login' %}">Login</a>
-                    <a class="nav-item nav-link" href="{% url 'blog-signup' %}">Signup</a>
-                {% else %}
-                    <a class="nav-item nav-link" href="{% url 'blog-logout' %}">Logout</a>
-                    <a class="nav-item nav-link" href="{% url 'blog-profile' %}">Profile</a>
-                    <a class="nav-item nav-link" href="{% url 'blog-post_form' %}">Post</a>
-                {% endif %}
+
+              {% if messg %}
+
+                <a class="nav-item nav-link" href="{% url 'blog-login' %}">Login</a>
+                <a class="nav-item nav-link" href="{% url 'blog-signup' %}">Signup</a>
+              {% else %}
+                <a class="nav-item nav-link" href="{% url 'blog-logout' %}">Logout</a>
+                <a class="nav-item nav-link" href="{% url 'blog-myProfile' %}">My Profile</a>
+                <a class="nav-item nav-link" href="{% url 'blog-post_form' %}">Make A Post</a>
+              {% endif %}
+
             </div>
           </div>
         </div>
@@ -70,9 +78,10 @@
             <div class="navbar-nav mr-auto">
 
             </div>
-            <!-- Navbar Right Side -->
+            <!-- Navbar Right Side 
             <div class="navbar-nav">
-              <a class="nav-item nav-link" href="{% url 'blog-contact' %}" style="color:white;">Contact Us</a>
+               <a class="nav-item nav-link" href="{% url 'blog-about' %}">About</a>
+               <a class="nav-item nav-link" href="{% url 'blog-contact' %}" style="color:white;">Contact Us</a>
             </div>
           </div>
         </div>
@@ -80,7 +89,7 @@
     </header>
     <main role="main" class="container">
       <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-8">-->
     </main>
 
       <!DOCTYPE html>
@@ -165,7 +174,7 @@ html {
         <p class="title">Product Owner</p>
         <p>Founder of multi-million dollar Tutoring App</p>
         <p>ccarri11@ucsc.edu</p>
-        <p><button class="button">Contact</button></p>
+        <p><button class="button"><a href="mailto:ccarri11@ucsc.edu?"Subject=Hello%20again target="_top">Contact</a></button></p>
       </div>
     </div>
   </div>
@@ -178,7 +187,7 @@ html {
         <p class="title">Senior Developer</p>
         <p>My current rate is $500 per line of code</p>
         <p>brpereir@ucsc.edu</p>
-        <p><button class="button"><a href="mailto:ccarri11@ucsc.edu?"Subject=Hello%20again target="_top">Contact</a></button></p>
+        <p><button class="button"><a href="mailto:brpereir@ucsc.edu?"Subject=Hello%20again target="_top">Contact</a></button></p>
       </div>
     </div>
   </div>
@@ -191,7 +200,7 @@ html {
         <p class="title">Senior Developer</p>
         <p>250k a year.</p>
         <p>dkim197@ucsc.edu</p>
-        <p><button class="button">Contact</button></p>
+        <p><button class="button"><a href="mailto:dkim197@ucsc.edu?"Subject=Hello%20again target="_top">Contact</a></button></p>
       </div>
     </div>
   </div>
@@ -204,7 +213,7 @@ html {
         <p class="title">Senior Developer</p>
         <p>Full Stack engineer</p>
         <p>kkim93@ucsc.edu</p>
-        <p><button class="button">Contact</button></p>
+        <p><button class="button"><a href="mailto:kkim93@ucsc.edu?"Subject=Hello%20again target="_top">Contact</a></button></p>
       </div>
     </div>
   </div>
@@ -217,7 +226,7 @@ html {
         <p class="title">Senior Developer</p>
         <p>Developer</p>
         <p>jrony@ucsc.edu</p>
-        <p><button class="button">Contact</button></p>
+        <p><button class="button"><a href="mailto:jrony@ucsc.edu?"Subject=Hello%20again target="_top">Contact</a></button></p>
       </div>
     </div>
   </div>

@@ -33,12 +33,8 @@ def home(request):
     message = "hide"
     try:
         idtoken = request.session['uid']
-        # print(idtoken)
-        localID = authe.get_account_info(idtoken)['users'][0]['localId']
-        # print(localID)
-        # name = database.child('users').child(localID).child('details').child('name').get().val()
-        # print(name)
-        return render(request, "blog/home.html", {"title": "Profile", "localID": localID})
+
+        return render(request, "blog/home.html", {"title": "Profile"})
 
     except KeyError:
 
@@ -92,6 +88,31 @@ def knowledge(request):
         return render(request, "blog/login.html", {"messg": message})
 
 
+def passwordReset(request):
+
+    return render(request, "blog/passwordReset.html")
+
+def postpasswordreset(request):
+
+    message1 = "Email link sent!"
+    message2 = "No such email address is registered with Tutor Trade."
+
+    email=request.POST.get('passResetEmail')
+
+    try:
+
+        authe.send_password_reset_email(email)
+
+        return render(request, "blog/login.html", {"messg": message1})
+
+    except:
+
+        return render(request, "blog/login.html", {"messg": message2})
+        
+
+
+
+
 
 
 def login(request):
@@ -110,17 +131,49 @@ def contact(request):
         return render(request, "blog/contact.html", {"messg": message})
 
 
-def profile(request):
+
+def editProfile(request): 
     message = "Please log in to access this feature."
     try:
         idtoken = request.session['uid']
+        localID = authe.get_account_info(idtoken)['users'][0]['localId']
+        storedFirstname = database.child('users').child(localID).child('details').child('name').get().val()
 
-        return render(request, "blog/profile.html", {"title": "Profile"})
-
-
+        return render(request, "blog/editProfile.html", {"headerName": storedFirstname})
+        
     except KeyError:
 
         return render(request, "blog/login.html", {"messg": message})
+                
+
+
+def myProfile(request):
+    message = "Please log in to access this feature."
+
+    try:
+
+        idtoken = request.session['uid']
+        localID = authe.get_account_info(idtoken)['users'][0]['localId']
+
+        storedFirstname = database.child('users').child(localID).child('details').child('name').get().val()
+        storedLastname = database.child('users').child(localID).child('details').child('nametwo').get().val()
+        storedContact = database.child('users').child(localID).child('details').child('contact').get().val()
+        storedLocation = database.child('users').child(localID).child('details').child('location').get().val()
+        storedCurMaj = database.child('users').child(localID).child('details').child('current_major').get().val()
+        storedHobbies = database.child('users').child(localID).child('details').child('Hobbies').get().val()
+
+        List1 = [storedFirstname, storedLastname, storedContact, storedLocation, storedCurMaj, storedHobbies]
+
+        List2 = ["First Name:", "Last Name:", "Contact Info:", "Location:", "Current Major:", "Hobbies:"]
+
+    
+        
+
+        return render(request, "blog/myProfile.html", {"detailList": List1, "headerName": storedFirstname, "labelList": List2})
+
+    except KeyError:
+        
+        return render(request, "blog/login.html", {"messg": message})  
 
 
 
@@ -133,47 +186,135 @@ def postsign(request): #Changes made by JR in order to display name instead of e
     print("passw")
     try:
         user = authe.sign_in_with_email_and_password(email,passw)
-        session_id=user['idToken']
-        request.session['uid']=str(session_id)
-        idtoken = request.session['uid']
-        #a = authe.get_account_info
-
-        localID = authe.get_account_info(idtoken)['users'][0]['localId']
-        # name = database.child('users').child(localID).child('details').child('name').get().val()
-        return render(request, "blog/knowledge.html",{"localID": localID})
     except:
         message = "invalid credentials"
         return render(request,"login.html",{"messg":message})
 
     #print(user['idToken'])
-
-
-def postsignup(request):
-
-    name=request.POST.get('name')
-    name2=request.POST.get('name2')
-    email=request.POST.get('email')
-    contact=request.POST.get('contact')
-    passw=request.POST.get('pass')
-
-    user=authe.create_user_with_email_and_password(email,passw)
-    # CC: Here we create account
-    # user = authe.sign_in_with_email_and_password(email,passw)
-
-    uid = user['localId']
-    # CC unique ID for the user
     session_id=user['idToken']
     request.session['uid']=str(session_id)
     idtoken = request.session['uid']
     #a = authe.get_account_info
-    localID = authe.get_account_info(idtoken)['users'][0]['localId']
 
-    data = {"name":name, "lastname":name2, "email":email, "contact":contact, "status":"1"}
+    localID = authe.get_account_info(idtoken)['users'][0]['localId']
+    name = database.child('users').child(localID).child('details').child('name').get().val()
+    return render(request, "blog/knowledge.html",{"e": name})
+
+def postsignup(request):
+
+    contact = ''
+    curmaj = ''
+    locale = ''
+
+
+    message1 = "Email already exists or does not meet valid email criteria."
+    message2 = "Passwords do not match.  Please Try again."
+
+    if(request.POST.get('contact') == ''):
+        contact = "None listed."
+    if(request.POST.get('contact') != ''):
+        contact = request.POST.get('contact')
+    #------------------------------------#
+
+    if(request.POST.get('major') == ''):
+        curmaj = "None listed."
+    if(request.POST.get('major') != ''):
+        curmaj = request.POST.get('major')
+    #------------------------------------#
+    
+    if(request.POST.get('location') == ''):
+        locale = "None listed."
+    if(request.POST.get('location') != ''):
+        locale = request.POST.get('location')
+    #------------------------------------#
+    
+          
+
+    
+    #email=request.POST.get('email')
+    #contact=request.POST.get('contact')
+    #curmaj=request.POST.get('major')
+    #locale=request.POST.get('location')
+    passw=request.POST.get('pass')
+    passtwo=request.POST.get('pass2')
+    email=request.POST.get('email')
+    name=request.POST.get('name')
+    name2=request.POST.get('name2')
+
+
+    if(passw != passtwo):
+
+        return render(request, "signup.html", {"messg2": message2})
+
+    try:
+        user=authe.create_user_with_email_and_password(email,passw)
+    except:
+        return render(request, "signup.html", {"messg1" : message1})    
+    # CC: Here we create account
+
+    uid = user['localId']
+    # CC unique ID for the user
+
+    
+    
+    data = {"name":name, "nametwo":name2, "email":email,"contact":contact, "location" : locale, "current_major": curmaj, "Hobbies": "None listed.", "status": "1"}
     # to push the data into the database, 1 means account is enabled
     # from above name and email from form and enabled the account
     # database constructor with multiple users
     database.child("users").child(uid).child("details").set(data)
-    return render(request,"knowledge.html", {"localID": localID})
+    return render(request,"login.html") 
+
+def postprofile(request):
+    message = "Profile updated!"
+
+    #JR: getting input from text fields from front end for use in conditional statements.
+
+    fname = request.POST.get("name1")
+    lname = request.POST.get("name2")
+    Cont = request.POST.get("contact")
+    locale = request.POST.get("location")
+    curmaj = request.POST.get("major")
+    hobbies = request.POST.get("hobbies")
+
+    idtoken = request.session['uid']
+    localID = authe.get_account_info(idtoken)['users'][0]['localId']
+
+    #JR: Getting stored values from database and putting them into variables for use in conditional statements.
+    storedFirstname = database.child('users').child(localID).child('details').child('name').get().val()
+    storedLastname = database.child('users').child(localID).child('details').child('nametwo').get().val()
+    storedContact = database.child('users').child(localID).child('details').child('contact').get().val()
+    storedLocation = database.child('users').child(localID).child('details').child('location').get().val()
+    storedCurMaj = database.child('users').child(localID).child('details').child('current_major').get().val()
+    storedHobbies = database.child('users').child(localID).child('details').child('Hobbies').get().val()
+
+    #JR: Conditional statments that determine whether or not to update profile information.
+
+    if(storedFirstname != fname and fname != ''):
+        database.child('users').child(localID).child('details').child('name').set(fname)
+    if(storedLastname != lname and lname != ''):
+        database.child('users').child(localID).child('details').child('nametwo').set(lname)
+    if(storedContact != Cont and Cont != ''):
+        database.child('users').child(localID).child('details').child('contact').set(Cont)
+    if(storedLocation != locale and locale != ''):
+        database.child('users').child(localID).child('details').child('location').set(locale)
+    if(storedCurMaj != curmaj and locale != ''):
+        database.child('users').child(localID).child('details').child('current_major').set(curmaj)
+    if(storedHobbies != hobbies and hobbies != ''):
+        database.child('users').child(localID).child('details').child('Hobbies').set(hobbies)
+            
+
+    storedFirstname = database.child('users').child(localID).child('details').child('name').get().val()
+    storedLastname = database.child('users').child(localID).child('details').child('nametwo').get().val()
+    storedContact = database.child('users').child(localID).child('details').child('contact').get().val()
+    storedLocation = database.child('users').child(localID).child('details').child('location').get().val()
+    storedCurMaj = database.child('users').child(localID).child('details').child('current_major').get().val()    
+    storedHobbies = database.child('users').child(localID).child('details').child('Hobbies').get().val()
+
+    List1 = [storedFirstname, storedLastname, storedContact, storedLocation, storedCurMaj, storedHobbies] 
+
+    List2 = ["First Name:", "Last Name:", "Contact Info:", "Location:", "Current Major:", "Hobbies:"] 
+
+    return render(request, 'myProfile.html', {"messg": message, "detailList": List1, "labelList": List2, "headerName": storedFirstname})      
 # CC: from print down --------------------------------------------------------------------------------------------------------------
 def logout(request): #JR deletes session; if there is no session to delete, render login page regardless
     try:
@@ -185,28 +326,4 @@ def logout(request): #JR deletes session; if there is no session to delete, rend
     return render(request, 'login.html')
 
 
-def knowledge_content(request):
-    message = "Please log in to access this feature."
 
-    try:
-        idtoken = request.session['uid']
-        localID = authe.get_account_info(idtoken)['users'][0]['localId']
-        name = database.child('users').child(localID).child('details').child('name').get().val()
-        return render(request, "blog/knowledge_content.html", {"e": name})
-
-    except KeyError:
-
-        return render(request, "blog/login.html", {"messg": message})
-
-def knowledge_content_update(request):
-    message = "Please log in to access this feature."
-
-    try:
-        idtoken = request.session['uid']
-        localID = authe.get_account_info(idtoken)['users'][0]['localId']
-        name = database.child('users').child(localID).child('details').child('name').get().val()
-        return render(request, "blog/knowledge_content_update.html", {"e": name})
-
-    except KeyError:
-
-        return render(request, "blog/login.html", {"messg": message})
